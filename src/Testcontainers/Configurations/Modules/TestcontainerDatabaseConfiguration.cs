@@ -1,5 +1,6 @@
 namespace DotNet.Testcontainers.Configurations
 {
+  using System.Collections.Generic;
   using JetBrains.Annotations;
 
   /// <summary>
@@ -23,5 +24,7 @@ namespace DotNet.Testcontainers.Configurations
     /// </summary>
     [PublicAPI]
     public virtual string Database { get; set; }
+
+    internal virtual Dictionary<string, string> AdditionalConnectionsStringSettings {get;set;}
   }
 }
