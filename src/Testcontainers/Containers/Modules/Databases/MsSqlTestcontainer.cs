@@ -1,6 +1,7 @@
 namespace DotNet.Testcontainers.Containers
 {
   using System;
+  using System.Collections.Generic;
   using System.Text;
   using System.Threading;
   using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace DotNet.Testcontainers.Containers
 
   /// <inheritdoc cref="TestcontainerDatabase" />
   [PublicAPI]
-  public sealed class MsSqlTestcontainer : TestcontainerDatabase
+  public sealed class MsSqlTestcontainer : TestcontainerDatabaseWithConnectionString
   {
     /// <summary>
     /// Initializes a new instance of the <see cref="MsSqlTestcontainer" /> class.
@@ -20,11 +21,11 @@ namespace DotNet.Testcontainers.Containers
     internal MsSqlTestcontainer(ITestcontainersConfiguration configuration, ILogger logger)
       : base(configuration, logger)
     {
+      this.ConnectionStringSettingsReplacers.Add(() => new KeyValuePair<string, string>("Server", $"{this.Hostname},{this.Port}"));
+      this.ConnectionStringSettingsReplacers.Add(() => new KeyValuePair<string, string>("Database", $"{this.Database}"));
+      this.ConnectionStringSettingsReplacers.Add(() => new KeyValuePair<string, string>("User Id", $"{this.Username}"));
+      this.ConnectionStringSettingsReplacers.Add(() => new KeyValuePair<string, string>("Password", $"{this.Password}"));
     }
-
-    /// <inheritdoc />
-    public override string ConnectionString
-      => $"Server={this.Hostname},{this.Port};Database={this.Database};User Id={this.Username};Password={this.Password};";
 
     /// <summary>
     /// Executes a SQL script in the database container.
